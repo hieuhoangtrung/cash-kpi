@@ -8,10 +8,14 @@
     "customize-cra": "^0.2.12",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "lodash": "^4.17.11",
     "react": "^16.8.6",
     "react-app-rewired": "^2.1.1",
     "react-dom": "^16.8.6",
-    "react-scripts": "2.1.8"
+    "react-redux": "^7.0.2",
+    "react-scripts": "2.1.8",
+    "redux-api-call": "^1.0.9",
+    "redux-starter-kit": "^0.4.3"
   },
   "scripts": {
     "start": "react-app-rewired start",
