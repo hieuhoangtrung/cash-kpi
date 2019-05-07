@@ -1,5 +1,8 @@
-import React from 'react';
-import { Table } from 'antd';
+import React, { useState } from 'react';
+import { Table, Button, Icon } from 'antd';
+import data from './mockData';
+import './index.css';
+import { EditableCell, EditableFormRow } from './EditableCell';
 
 // rowSelection object indicates the need for row selection
 const rowSelection = {
@@ -16,509 +19,117 @@ const columns = [
   {
     title: 'Date',
     dataIndex: 'date',
+    width: 110,
   },
   {
     title: 'Description',
     dataIndex: 'description',
+    width: 200,
   },
   {
     title: 'Amount',
     dataIndex: 'amount',
+    width: 150,
   },
   {
     title: 'Base',
     dataIndex: 'base',
+    width: 150,
+    isCheckbox: true,
   },
   {
     title: 'S1',
     dataIndex: 's1',
+    width: 100,
+    isCheckbox: true,
   },
   {
     title: 'S2',
     dataIndex: 's2',
+    width: 100,
+    isCheckbox: true,
   },
   {
     title: 'Happy',
     dataIndex: 'happy',
+    width: 100,
+    isCheckbox: true,
   },
   {
     title: 'Sad',
     dataIndex: 'sad',
-  },
-];
-const data = [
-  {
-    date: '3/24/2019',
-    description: 'Vay',
-    amount: '500,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '3/29/2019',
-    description: 'Khách hàng về',
-    amount: '1,500,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '3/31/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '3/31/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/1/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/1/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/2/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: null,
-    s1: null,
-    s2: null,
-    sad: null,
-  },
-  {
-    date: '4/3/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/5/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/5/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/5/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/5/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/5/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/6/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/15/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/15/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/15/2019',
-    description: 'Pay Mr X',
-    amount: '-120,000,000',
-    base: 1,
-    happy: null,
-    s1: null,
-    s2: null,
-    sad: null,
-  },
-  {
-    date: '4/20/2019',
-    description: 'Pay Mr X',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: null,
-    sad: null,
-  },
-  {
-    date: '4/20/2019',
-    description: 'Pay Mr X (50% only)',
-    amount: '-60,000,000',
-    base: 1,
-    happy: null,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/15/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/15/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/15/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/16/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/16/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/17/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/18/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '4/30/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: null,
-    sad: null,
-  },
-  {
-    date: '4/30/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: null,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/30/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/30/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '4/30/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: null,
-    sad: 1,
-  },
-  {
-    date: '5/5/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/5/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/5/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/5/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/15/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/15/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/16/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: 1,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '5/20/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/1/2019',
-    description: 'Xây dựng phần mềm nhân sự',
-    amount: '-120,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/5/2019',
-    description: 'Vay',
-    amount: '500,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/5/2019',
-    description: 'Khách hàng về',
-    amount: '1,500,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/5/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/15/2019',
-    description: 'Xây dựng phần mềm kế toán',
-    amount: '-35,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/15/2019',
-    description: 'Vay',
-    amount: '500,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/16/2019',
-    description: 'Khách hàng về',
-    amount: '1,500,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
-  },
-  {
-    date: '6/20/2019',
-    description: 'Lương',
-    amount: '750,000,000',
-    base: null,
-    happy: 1,
-    s1: 1,
-    s2: 1,
-    sad: 1,
+    width: 100,
+    isCheckbox: true,
   },
 ];
 
-const DataTable = () => <Table rowSelection={rowSelection} columns={columns} dataSource={data} />;
+const EditableTable = () => {
+  const [dataSource, setDataSource] = useState(data);
+  const [count, setCount] = useState(data.length);
 
-export default DataTable;
+  const handleAdd = () => {
+    const newData = {
+      key: count,
+      date: '',
+      description: '',
+      amount: 0,
+      base: null,
+      happy: null,
+      s1: null,
+      s2: null,
+      sad: null,
+    };
+    setCount(count + 1);
+    setDataSource([...dataSource, newData]);
+  };
+
+  const handleSave = row => {
+    const newData = [...dataSource];
+    const index = newData.findIndex(item => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, {
+      ...item,
+      ...row,
+    });
+    setDataSource(newData);
+  };
+
+  const components = {
+    body: {
+      row: EditableFormRow,
+      cell: EditableCell,
+    },
+  };
+  const revisedColumns = columns.map(col => {
+    return {
+      ...col,
+      onCell: record => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        isCheckbox: col.isCheckbox,
+        handleSave,
+      }),
+    };
+  });
+  return (
+    <div>
+      <Button onClick={handleAdd} type="dashed" style={{ marginBottom: 16 }}>
+        <Icon type="plus" /> Add a row
+      </Button>
+      <Table
+        components={components}
+        rowClassName={() => 'editable-row'}
+        bordered
+        dataSource={dataSource}
+        columns={revisedColumns}
+        pagination={{ pageSize: 50 }}
+        scroll={{ y: 600 }}
+        rowSelection={rowSelection}
+      />
+    </div>
+  );
+};
+
+export default EditableTable;

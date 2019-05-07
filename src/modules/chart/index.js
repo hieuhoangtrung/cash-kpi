@@ -742,19 +742,13 @@ const cols = {
 };
 
 const DataChart = () => (
-  <Chart
-    height={400}
-    data={dv}
-    scale={cols}
-    forceFit
-    // padding={[20, 'auto', 30, 'auto']} // Automatic calculation chart's padding which include legend、axis's width and height.
-  >
+  <Chart height={400} data={dv} scale={cols} forceFit>
     <Legend />
     <Axis name="Date" title />
     <Axis
       name="amount"
       label={{
-        formatter: val => `${val.slice(0, 5)}`,
+        formatter: val => `${val.slice(0, 4)} mil VND`,
       }}
     />
     <Tooltip
