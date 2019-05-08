@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Button, Icon } from 'antd';
+import moment from 'moment';
 import data from './mockData';
 import './index.css';
 import { EditableCell, EditableFormRow } from './EditableCell';
@@ -69,8 +70,8 @@ const EditableTable = () => {
 
   const handleAdd = () => {
     const newData = {
-      key: count,
-      date: '',
+      id: count,
+      date: moment(),
       description: '',
       amount: 0,
       base: null,
@@ -78,6 +79,7 @@ const EditableTable = () => {
       s1: null,
       s2: null,
       sad: null,
+      isEditing: true,
     };
     setCount(count + 1);
     setDataSource([...dataSource, newData]);
@@ -85,7 +87,7 @@ const EditableTable = () => {
 
   const handleSave = row => {
     const newData = [...dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
+    const index = newData.findIndex(item => row.id === item.id);
     const item = newData[index];
     newData.splice(index, 1, {
       ...item,
@@ -100,6 +102,7 @@ const EditableTable = () => {
       cell: EditableCell,
     },
   };
+
   const revisedColumns = columns.map(col => {
     return {
       ...col,
@@ -127,6 +130,7 @@ const EditableTable = () => {
         pagination={{ pageSize: 50 }}
         scroll={{ y: 600 }}
         rowSelection={rowSelection}
+        rowKey="id"
       />
     </div>
   );

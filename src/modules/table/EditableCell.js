@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Form, Input, Checkbox, InputNumber } from 'antd';
+import { Form, Input, Checkbox, InputNumber, DatePicker } from 'antd';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
@@ -12,8 +13,23 @@ const EditableRow = ({ form, index, ...props }) => (
 
 export const EditableFormRow = Form.create()(EditableRow);
 
+const getInputComponentByDataIndex = (dataIndex, save, inputRef) => {
+  return {
+    amount: (
+      <InputNumber
+        ref={inputRef}
+        formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        parser={value => value.replace(/\$\s?|(,*)/g, '')}
+        onPressEnter={save}
+        onBlur={save}
+      />
+    ),
+    description: <Input ref={inputRef} onPressEnter={save} onBlur={save} />,
+  }[dataIndex];
+};
+
 const EditableCell = ({ dataIndex, title, record, handleSave, isCheckbox, ...restProps }) => {
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(record && record.isEditing);
   const inputRef = useRef(null);
   const formRef = useRef(null);
 
@@ -24,7 +40,7 @@ const EditableCell = ({ dataIndex, title, record, handleSave, isCheckbox, ...res
     }
   };
 
-  const save = e => {
+  const saveInput = e => {
     formRef.current.validateFields((error, values) => {
       if (error && error[e.currentTarget.id]) {
         return;
@@ -34,16 +50,49 @@ const EditableCell = ({ dataIndex, title, record, handleSave, isCheckbox, ...res
     });
   };
 
-  const onChangedCheckbox = e => {
-    handleSave({ ...record, [dataIndex]: e.target.checked });
+  const onChangedCheckbox = e => handleSave({ ...record, [dataIndex]: e.target.checked });
+
+  const saveDatePicker = (date, dateString) => {
+    if (dateString) {
+      toggleEdit();
+      handleSave({ ...record, date: dateString });
+    }
   };
 
   if (dataIndex) {
+    if (isCheckbox) {
+      return (
+        <td {...restProps}>
+          <Checkbox onChange={onChangedCheckbox} checked={!!record[dataIndex]} />{' '}
+        </td>
+      );
+    }
+
+    if (dataIndex === 'date') {
+      return (
+        <td {...restProps}>
+          {editing ? (
+            <DatePicker
+              autoFocus
+              style={{ width: 120 }}
+              defaultValue={moment(record[dataIndex], 'DD/MM/YYYY')}
+              ref={inputRef}
+              format="DD/MM/YYYY"
+              onChange={saveDatePicker}
+              onOpenChange={open => !open && toggleEdit()}
+            />
+          ) : (
+            <div className="editable-cell-value-wrap" style={{ paddingRight: 10 }} onClick={toggleEdit}>
+              {restProps.children}
+            </div>
+          )}
+        </td>
+      );
+    }
+
     return (
       <td {...restProps}>
-        {isCheckbox ? (
-          <Checkbox onChange={onChangedCheckbox} checked={!!record[dataIndex]} />
-        ) : (
+        {
           <EditableContext.Consumer>
             {form => {
               formRef.current = form;
@@ -57,20 +106,7 @@ const EditableCell = ({ dataIndex, title, record, handleSave, isCheckbox, ...res
                       },
                     ],
                     initialValue: record[dataIndex],
-                  })(
-                    dataIndex === 'amount' ? (
-                      <InputNumber
-                        ref={inputRef}
-                        formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                        // onChange={onChange}
-                        onPressEnter={save}
-                        onBlur={save}
-                      />
-                    ) : (
-                      <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-                    ),
-                  )}
+                  })(getInputComponentByDataIndex(dataIndex, saveInput, inputRef))}
                 </FormItem>
               ) : (
                 <div className="editable-cell-value-wrap" style={{ paddingRight: 10 }} onClick={toggleEdit}>
@@ -79,7 +115,7 @@ const EditableCell = ({ dataIndex, title, record, handleSave, isCheckbox, ...res
               );
             }}
           </EditableContext.Consumer>
-        )}
+        }
       </td>
     );
   }
