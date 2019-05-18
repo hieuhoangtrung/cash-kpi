@@ -74,6 +74,8 @@ const EditableCell = ({ dataIndex, title, record, handleSave, isCheckbox, ...res
           {editing ? (
             <DatePicker
               autoFocus
+              showToday
+              open
               style={{ width: 120 }}
               defaultValue={moment(record[dataIndex], 'DD/MM/YYYY')}
               ref={inputRef}
