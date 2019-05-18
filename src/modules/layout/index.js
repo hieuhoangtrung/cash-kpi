@@ -22,7 +22,7 @@ const DefaultLayout = () => (
         <Breadcrumb.Item>Home</Breadcrumb.Item>
         <Breadcrumb.Item>CashFlow Forecast</Breadcrumb.Item>
       </Breadcrumb>
-      <Chart />
+      {/*<Chart />*/}
       <Table />
     </Content>
     <Footer style={{ textAlign: 'center' }}>Peter Hoang © 2019 - Cash KPI</Footer>
